@@ -6,8 +6,11 @@ TagManager:
   tags:
   - CinemachineTarget
   - Crystal
-  - Oil
   - Nail
+  - GoalArea
+  - DamageOverTime
+  - Fuel
+  - Damage
   layers:
   - Default
   - TransparentFX
