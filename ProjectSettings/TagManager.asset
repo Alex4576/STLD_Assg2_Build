@@ -11,6 +11,7 @@ TagManager:
   - DamageOverTime
   - Fuel
   - Damage
+  - Golden
   layers:
   - Default
   - TransparentFX

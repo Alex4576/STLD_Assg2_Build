@@ -5,6 +5,7 @@ using TMPro;
 public class PlayerScript: MonoBehaviour
 {
     // Score variables for each type of collectible, initialized to 0 at the start of the game
+    int goldenScore = 0; // Store the player's score from collecting golden items, initialized to 0 at the start of the game
     int crystalScore = 0; // Store the player's score from collecting crystals, initialized to 0 at the start of the game
     int fuelScore = 0; // Store the player's score from collecting fuel, initialized to 0 at the start of the game
     int nailScore = 0; // Store the player's score from collecting nails, initialized to 0 at the start of the game
@@ -101,6 +102,20 @@ public class PlayerScript: MonoBehaviour
         {
             Debug.Log("Raycast hit: " + hit.collider.name);
 
+            // Golden Crystal collectible
+            if (hit.collider.CompareTag("Golden"))
+            {
+            Collectible collectible = hit.collider.GetComponentInParent<Collectible>();
+            if (collectible != null)
+            {
+                goldenScore += collectible.collectibleScore; // Increase the player's score by the value of the collected item
+                Debug.Log("Golden score: " + goldenScore); // Log the player's current golden score after collecting an item
+                UpdateScoreUI(); // Update the score display
+                collectible.Collect(); // Call the Collect method on the collectible to handle its collection logic (e.g., play sound, destroy object)
+                return; // Exit the method after collecting an item to prevent multiple interactions in one frame
+            }
+            }
+
             // Crystal collectible
             if (hit.collider.CompareTag("Crystal"))
             {
@@ -146,9 +161,10 @@ public class PlayerScript: MonoBehaviour
             // Check if we hit the goal area as well as collected all required items
             if (hit.collider.CompareTag("GoalArea"))
             {
-                if (crystalScore >= 1 && fuelScore >= 1 && nailScore >= 1)
+                hit.collider.GetComponent<AudioSource>().Play(); // Play a sound effect when the player interacts with the goal area
+                if (crystalScore >= 9 && fuelScore >= 15 && nailScore >= 22 && goldenScore >= 1) // Check if the player has collected at least 1 of each required item
                 {
-                    Debug.Log("Spaceship ready to launch... Let's go Home!"); // Log a winning message if the player reaches the goal area with enough points
+                    Debug.Log("Spaceship is fixed, ready to launch... Let's go Home!"); // Log a winning message if the player reaches the goal area with enough points
                     ShowWinScreen(); // Call a method to show the win screen (this method would need to be implemented separately)
                 }
                 else
@@ -165,7 +181,7 @@ public class PlayerScript: MonoBehaviour
 
     void UpdateScoreUI()
     {
-        scoreText.text = "Crystal: " + crystalScore + "/1\nFuel: " + fuelScore + "/1\nNail: " + nailScore + "/1"; // Update the score display to show all score types
+        scoreText.text = "Crystal: " + crystalScore + "/9\nFuel: " + fuelScore + "/15\nNail: " + nailScore + "/22\nGolden Crystal: " + goldenScore + "/1"; // Update the score display to show all score types
     }
 
     // Damage over time
